@@ -35,3 +35,20 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return f"{self.quantity} {self.name}"
+    
+class MealPlan(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="meal_plans",
+    )
+    title = models.CharField(max_length=200)
+    week_start = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-week_start"]
+
+    def __str__(self):
+        return f"{self.title} ({self.week_start})"
+    
