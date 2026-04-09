@@ -21,6 +21,7 @@ class IngredientAdmin(admin.ModelAdmin):
     list_display = ("name", "recipe", "quantity")
     search_fields = ("name", "recipe__title")
     list_filter = ("recipe",)
+    ordering = ("name",)
 
 
 @admin.register(MealPlan)
@@ -36,3 +37,4 @@ class MealPlanEntryAdmin(admin.ModelAdmin):
     list_display = ("meal_plan", "recipe", "day_of_week", "meal_type")
     search_fields = ("meal_plan__title", "recipe__title")
     list_filter = ("day_of_week", "meal_type")
+    ordering = ("day_of_week", "meal_type")
