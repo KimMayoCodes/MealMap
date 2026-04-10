@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -10,7 +11,7 @@ from django.views.generic import (
     UpdateView,
 )
 
-from .models import Recipe
+from .models import Recipe, Ingredient
 
 
 class HomePageView(TemplateView):
@@ -85,3 +86,53 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         return Recipe.objects.filter(owner=self.request.user)
+    
+class IngredientCreateView(LoginRequiredMixin, CreateView):
+    model = Ingredient
+    template_name = "MealMap/ingredient_form.html"
+    fields = ["name", "quantity", "notes"]
+
+    def dispatch(self, request, *args, **kwargs):
+        self.recipe = get_object_or_404(Recipe, pk=self.kwargs["recipe_pk"], owner=request.user)
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.recipe = self.recipe
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["recipe"] = self.recipe
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy("recipe_detail", kwargs={"pk": self.recipe.pk})
+
+
+class IngredientUpdateView(LoginRequiredMixin, UpdateView):
+    model = Ingredient
+    template_name = "MealMap/ingredient_form.html"
+    fields = ["name", "quantity", "notes"]
+
+    def get_queryset(self):
+        return Ingredient.objects.filter(recipe__owner=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["recipe"] = self.object.recipe
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy("recipe_detail", kwargs={"pk": self.object.recipe.pk})
+
+
+class IngredientDeleteView(LoginRequiredMixin, DeleteView):
+    model = Ingredient
+    template_name = "MealMap/ingredient_confirm_delete.html"
+
+    def get_queryset(self):
+        return Ingredient.objects.filter(recipe__owner=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy("recipe_detail", kwargs={"pk": self.object.recipe.pk})
+    

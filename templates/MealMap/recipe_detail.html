@@ -11,12 +11,39 @@
         <h2 class="h5 mt-4">Description</h2>
         <p>{{ recipe.description|default:"No description provided." }}</p>
 
+        <h2 class="h5 mt-4">Ingredients</h2>
+        <a href="{% url 'ingredient_create' recipe.pk %}" class="btn btn-success btn-sm mb-3">
+            Add Ingredient
+        </a>
+
+        {% if recipe.ingredients.exists %}
+            <ul class="list-group mb-4">
+                {% for ingredient in recipe.ingredients.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ ingredient.quantity }}</strong> {{ ingredient.name }}
+                            {% if ingredient.notes %}
+                                <br>
+                                <small class="text-muted">{{ ingredient.notes }}</small>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <a href="{% url 'ingredient_update' ingredient.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{% url 'ingredient_delete' ingredient.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No ingredients added yet.</p>
+        {% endif %}
+
         <h2 class="h5 mt-4">Instructions</h2>
         <p>{{ recipe.instructions|linebreaks }}</p>
 
         <div class="mt-4">
-            <a href="{% url 'recipe_update' recipe.pk %}" class="btn btn-warning">Edit</a>
-            <a href="{% url 'recipe_delete' recipe.pk %}" class="btn btn-danger">Delete</a>
+            <a href="{% url 'recipe_update' recipe.pk %}" class="btn btn-warning">Edit Recipe</a>
+            <a href="{% url 'recipe_delete' recipe.pk %}" class="btn btn-danger">Delete Recipe</a>
             <a href="{% url 'recipe_list' %}" class="btn btn-secondary">Back to Recipes</a>
         </div>
     </div>
