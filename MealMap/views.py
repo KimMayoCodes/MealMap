@@ -69,3 +69,19 @@ class RecipeDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_queryset(self):
         return Recipe.objects.filter(owner=self.request.user)
+    
+class RecipeListView(LoginRequiredMixin, ListView):
+    model = Recipe
+    template_name = "MealMap/recipe_list.html"
+    context_object_name = "recipes"
+
+    def get_queryset(self):
+        return Recipe.objects.filter(owner=self.request.user)
+    
+class RecipeDetailView(LoginRequiredMixin, DetailView):
+    model = Recipe
+    template_name = "MealMap/recipe_detail.html"
+    context_object_name = "recipe"
+
+    def get_queryset(self):
+        return Recipe.objects.filter(owner=self.request.user)

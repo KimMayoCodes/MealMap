@@ -3,12 +3,18 @@
 {% block title %}{{ recipe.title }} | MealMap{% endblock %}
 
 {% block content %}
-<h1 class="text-success">{{ recipe.title }}</h1>
-<p><strong>Description:</strong> {{ recipe.description }}</p>
-<p><strong>Cook Time:</strong> {{ recipe.cook_time }} minutes</p>
-<p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h1 class="card-title text-success">{{ recipe.title }}</h1>
+        <p class="text-muted">Cook Time: {{ recipe.cook_time }} minutes</p>
 
-<a href="{% url 'recipe_update' recipe.pk %}" class="btn btn-warning">Edit</a>
-<a href="{% url 'recipe_delete' recipe.pk %}" class="btn btn-danger">Delete</a>
-<a href="{% url 'recipe_list' %}" class="btn btn-secondary">Back</a>
+        <h2 class="h5 mt-4">Description</h2>
+        <p>{{ recipe.description|default:"No description provided." }}</p>
+
+        <h2 class="h5 mt-4">Instructions</h2>
+        <p>{{ recipe.instructions|linebreaks }}</p>
+
+        <a href="{% url 'recipe_list' %}" class="btn btn-secondary mt-3">Back to Recipes</a>
+    </div>
+</div>
 {% endblock %}
