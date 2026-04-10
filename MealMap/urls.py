@@ -9,6 +9,9 @@ from .views import (
     MealPlanDetailView,
     MealPlanListView,
     MealPlanUpdateView,
+    MealPlanEntryCreateView,
+    MealPlanEntryDeleteView,
+    MealPlanEntryUpdateView,
     RecipeCreateView,
     RecipeDeleteView,
     RecipeDetailView,
@@ -36,4 +39,20 @@ urlpatterns = [
     path("mealplans/<int:pk>/", MealPlanDetailView.as_view(), name="mealplan_detail"),
     path("mealplans/<int:pk>/edit/", MealPlanUpdateView.as_view(), name="mealplan_update"),
     path("mealplans/<int:pk>/delete/", MealPlanDeleteView.as_view(), name="mealplan_delete"),
+
+    path(
+        "mealplans/<int:mealplan_pk>/entries/new/",
+        MealPlanEntryCreateView.as_view(),
+        name="mealplanentry_create",
+    ),
+    path(
+        "entries/<int:pk>/edit/",
+        MealPlanEntryUpdateView.as_view(),
+        name="mealplanentry_update",
+    ),
+    path(
+        "entries/<int:pk>/delete/",
+        MealPlanEntryDeleteView.as_view(),
+        name="mealplanentry_delete",
+    ),
 ]

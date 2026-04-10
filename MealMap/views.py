@@ -11,7 +11,7 @@ from django.views.generic import (
     UpdateView,
 )
 
-from .models import Recipe, Ingredient, MealPlan
+from .models import Recipe, Ingredient, MealPlan, MealPlanEntry
 
 
 class HomePageView(TemplateView):
@@ -182,4 +182,67 @@ class MealPlanDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_queryset(self):
         return MealPlan.objects.filter(owner=self.request.user)
+    
+class MealPlanEntryCreateView(LoginRequiredMixin, CreateView):
+    model = MealPlanEntry
+    template_name = "MealMap/mealplanentry_form.html"
+    fields = ["recipe", "day_of_week", "meal_type"]
+
+    def dispatch(self, request, *args, **kwargs):
+        self.mealplan = get_object_or_404(
+            MealPlan,
+            pk=self.kwargs["mealplan_pk"],
+            owner=request.user,
+        )
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["recipe"].queryset = Recipe.objects.filter(owner=self.request.user)
+        return form
+
+    def form_valid(self, form):
+        form.instance.meal_plan = self.mealplan
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["mealplan"] = self.mealplan
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy("mealplan_detail", kwargs={"pk": self.mealplan.pk})
+
+
+class MealPlanEntryUpdateView(LoginRequiredMixin, UpdateView):
+    model = MealPlanEntry
+    template_name = "MealMap/mealplanentry_form.html"
+    fields = ["recipe", "day_of_week", "meal_type"]
+
+    def get_queryset(self):
+        return MealPlanEntry.objects.filter(meal_plan__owner=self.request.user)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["recipe"].queryset = Recipe.objects.filter(owner=self.request.user)
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["mealplan"] = self.object.meal_plan
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy("mealplan_detail", kwargs={"pk": self.object.meal_plan.pk})
+
+
+class MealPlanEntryDeleteView(LoginRequiredMixin, DeleteView):
+    model = MealPlanEntry
+    template_name = "MealMap/mealplanentry_confirm_delete.html"
+
+    def get_queryset(self):
+        return MealPlanEntry.objects.filter(meal_plan__owner=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy("mealplan_detail", kwargs={"pk": self.object.meal_plan.pk})
     
