@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}{{ mealplan.title }} | MealMap{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h1 class="card-title text-success">{{ mealplan.title }}</h1>
+        <p class="text-muted">Week of {{ mealplan.week_start }}</p>
+
+        <h2 class="h5 mt-4">Planned Meals</h2>
+        <p class="text-muted">Meal plan entries will appear here once added.</p>
+
+        <div class="mt-4">
+            <a href="{% url 'mealplan_update' mealplan.pk %}" class="btn btn-warning">Edit</a>
+            <a href="{% url 'mealplan_delete' mealplan.pk %}" class="btn btn-danger">Delete</a>
+            <a href="{% url 'mealplan_list' %}" class="btn btn-secondary">Back to Meal Plans</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

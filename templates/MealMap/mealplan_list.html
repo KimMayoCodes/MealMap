@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}My Meal Plans | MealMap{% endblock %}
+
+{% block content %}
+<h1 class="mb-4 text-success">My Meal Plans</h1>
+
+<a href="{% url 'mealplan_create' %}" class="btn btn-success mb-3">Add Meal Plan</a>
+
+{% if mealplans %}
+    <div class="list-group">
+        {% for mealplan in mealplans %}
+            <a href="{% url 'mealplan_detail' mealplan.pk %}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ mealplan.title }}</h5>
+                    <small>Week of {{ mealplan.week_start }}</small>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        You do not have any meal plans yet.
+    </div>
+{% endif %}
+{% endblock %}

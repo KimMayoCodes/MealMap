@@ -11,7 +11,7 @@ from django.views.generic import (
     UpdateView,
 )
 
-from .models import Recipe, Ingredient
+from .models import Recipe, Ingredient, MealPlan
 
 
 class HomePageView(TemplateView):
@@ -135,4 +135,51 @@ class IngredientDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy("recipe_detail", kwargs={"pk": self.object.recipe.pk})
+    
+class MealPlanListView(LoginRequiredMixin, ListView):
+    model = MealPlan
+    template_name = "MealMap/mealplan_list.html"
+    context_object_name = "mealplans"
+
+    def get_queryset(self):
+        return MealPlan.objects.filter(owner=self.request.user)
+
+
+class MealPlanDetailView(LoginRequiredMixin, DetailView):
+    model = MealPlan
+    template_name = "MealMap/mealplan_detail.html"
+    context_object_name = "mealplan"
+
+    def get_queryset(self):
+        return MealPlan.objects.filter(owner=self.request.user)
+
+
+class MealPlanCreateView(LoginRequiredMixin, CreateView):
+    model = MealPlan
+    template_name = "MealMap/mealplan_form.html"
+    fields = ["title", "week_start"]
+    success_url = reverse_lazy("mealplan_list")
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+
+class MealPlanUpdateView(LoginRequiredMixin, UpdateView):
+    model = MealPlan
+    template_name = "MealMap/mealplan_form.html"
+    fields = ["title", "week_start"]
+    success_url = reverse_lazy("mealplan_list")
+
+    def get_queryset(self):
+        return MealPlan.objects.filter(owner=self.request.user)
+
+
+class MealPlanDeleteView(LoginRequiredMixin, DeleteView):
+    model = MealPlan
+    template_name = "MealMap/mealplan_confirm_delete.html"
+    success_url = reverse_lazy("mealplan_list")
+
+    def get_queryset(self):
+        return MealPlan.objects.filter(owner=self.request.user)
     
