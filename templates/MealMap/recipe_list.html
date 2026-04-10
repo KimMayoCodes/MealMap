@@ -5,6 +5,8 @@
 {% block content %}
 <h1 class="mb-4 text-success">My Recipes</h1>
 
+<a href="{% url 'recipe_create' %}" class="btn btn-success mb-3">Add Recipe</a>
+
 {% if recipes %}
     <div class="list-group">
         {% for recipe in recipes %}

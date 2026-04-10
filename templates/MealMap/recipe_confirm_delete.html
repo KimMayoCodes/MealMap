@@ -3,13 +3,25 @@
 {% block title %}Delete Recipe | MealMap{% endblock %}
 
 {% block content %}
-<h1 class="mb-4 text-danger">Delete Recipe</h1>
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm border-danger">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-3 text-danger">Delete Recipe</h1>
 
-<p>Are you sure you want to delete <strong>{{ object.title }}</strong>?</p>
+                <p>
+                    Are you sure you want to delete
+                    <strong>{{ object.title }}</strong>?
+                </p>
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a href="{% url 'recipe_detail' object.pk %}" class="btn btn-secondary">Cancel</a>
-</form>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <a href="{% url 'recipe_detail' object.pk %}" class="btn btn-secondary">Cancel</a>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
