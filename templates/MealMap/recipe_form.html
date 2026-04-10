@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Recipe Form | MealMap{% endblock %}
+
+{% block content %}
+<h1 class="mb-4 text-success">
+    {% if object %}Edit Recipe{% else %}Add Recipe{% endif %}
+</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="{% url 'recipe_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}My Recipes | MealMap{% endblock %}
+
+{% block content %}
+<h1 class="mb-4 text-success">My Recipes</h1>
+
+<a href="{% url 'recipe_create' %}" class="btn btn-success mb-3">Add Recipe</a>
+
+{% if recipes %}
+    <div class="list-group">
+        {% for recipe in recipes %}
+            <a href="{% url 'recipe_detail' recipe.pk %}" class="list-group-item list-group-item-action">
+                {{ recipe.title }}
+            </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>You do not have any recipes yet.</p>
+{% endif %}
+{% endblock %}
