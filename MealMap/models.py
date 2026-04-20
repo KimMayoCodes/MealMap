@@ -89,3 +89,20 @@ class MealPlanEntry(models.Model):
     def __str__(self):
         return f"{self.day_of_week} {self.meal_type}: {self.recipe.title}"
     
+class PantryItem(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="pantry_items",
+    )
+    name = models.CharField(max_length=100)
+    quantity = models.CharField(max_length=50)
+    notes = models.CharField(max_length=200, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return f"{self.quantity} {self.name}"
+    

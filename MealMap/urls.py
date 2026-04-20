@@ -18,6 +18,11 @@ from .views import (
     RecipeListView,
     RecipeUpdateView,
     SignUpView,
+    PantryItemCreateView,
+    PantryItemDeleteView,
+    PantryItemListView,
+    PantryItemUpdateView,
+    SuggestedRecipeListView
 )
 
 urlpatterns = [
@@ -55,4 +60,9 @@ urlpatterns = [
         MealPlanEntryDeleteView.as_view(),
         name="mealplanentry_delete",
     ),
+    path("pantry/", PantryItemListView.as_view(), name="pantry_list"),
+    path("pantry/new/", PantryItemCreateView.as_view(), name="pantry_create"),
+    path("pantry/<int:pk>/edit/", PantryItemUpdateView.as_view(), name="pantry_update"),
+    path("pantry/<int:pk>/delete/", PantryItemDeleteView.as_view(), name="pantry_delete"),
+    path("suggestions/", SuggestedRecipeListView.as_view(), name="suggested_recipes"),
 ]

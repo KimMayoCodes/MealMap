@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+from django.db.models import Count, Q
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -13,7 +14,13 @@ from django.views.generic import (
     UpdateView,
 )
 
-from .models import Ingredient, MealPlan, MealPlanEntry, Recipe
+from .models import(
+    Ingredient,
+    MealPlan,
+    MealPlanEntry,
+    Recipe,
+    PantryItem
+)
 
 
 class HomePageView(TemplateView):
@@ -262,3 +269,114 @@ class MealPlanEntryDeleteView(LoginRequiredMixin, DeleteView):
     def form_valid(self, form):
         messages.success(self.request, "Meal entry deleted successfully.")
         return super().form_valid(form)
+    
+class PantryItemListView(LoginRequiredMixin, ListView):
+    model = PantryItem
+    template_name = "MealMap/pantry_list.html"
+    context_object_name = "pantry_items"
+
+    def get_queryset(self):
+        return PantryItem.objects.filter(owner=self.request.user)
+
+
+class PantryItemCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = PantryItem
+    template_name = "MealMap/pantry_form.html"
+    fields = ["name", "quantity", "notes"]
+    success_url = reverse_lazy("pantry_list")
+    success_message = "Pantry item added successfully."
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+
+class PantryItemUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = PantryItem
+    template_name = "MealMap/pantry_form.html"
+    fields = ["name", "quantity", "notes"]
+    success_url = reverse_lazy("pantry_list")
+    success_message = "Pantry item updated successfully."
+
+    def get_queryset(self):
+        return PantryItem.objects.filter(owner=self.request.user)
+
+
+class PantryItemDeleteView(LoginRequiredMixin, DeleteView):
+    model = PantryItem
+    template_name = "MealMap/pantry_confirm_delete.html"
+    success_url = reverse_lazy("pantry_list")
+
+    def get_queryset(self):
+        return PantryItem.objects.filter(owner=self.request.user)
+
+    def form_valid(self, form):
+        messages.success(self.request, "Pantry item deleted successfully.")
+        return super().form_valid(form)
+    
+from django.db.models import Q
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from .models import PantryItem, Recipe
+
+
+class SuggestedRecipeListView(LoginRequiredMixin, ListView):
+    model = Recipe
+    template_name = "MealMap/suggested_recipes.html"
+    context_object_name = "recipes"
+
+    def get_queryset(self):
+        # Return only this user's recipes
+        return Recipe.objects.filter(owner=self.request.user).order_by("title")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        pantry_items = PantryItem.objects.filter(owner=self.request.user).order_by("name")
+        user_recipes = Recipe.objects.filter(owner=self.request.user).distinct()
+
+        pantry_names = [
+            item.name.strip().lower()
+            for item in pantry_items
+            if item.name and item.name.strip()
+        ]
+
+        recipe_matches = []
+
+        for recipe in user_recipes:
+            ingredient_names = [
+                name.strip().lower()
+                for name in recipe.ingredients.values_list("name", flat=True)
+                if name and name.strip()
+            ]
+
+            matched_items = set()
+
+            for pantry_name in pantry_names:
+                pantry_base = pantry_name[:-1] if pantry_name.endswith("s") else pantry_name
+
+                for ingredient_name in ingredient_names:
+                    ingredient_base = (
+                        ingredient_name[:-1] if ingredient_name.endswith("s") else ingredient_name
+                    )
+
+                    if (
+                        pantry_name == ingredient_name
+                        or pantry_name in ingredient_name
+                        or ingredient_name in pantry_name
+                        or pantry_base == ingredient_name
+                        or pantry_name == ingredient_base
+                        or pantry_base == ingredient_base
+                    ):
+                        matched_items.add(pantry_name)
+                        break
+
+            if matched_items:
+                recipe_matches.append((recipe, len(matched_items), sorted(matched_items)))
+
+        recipe_matches.sort(key=lambda item: (-item[1], item[0].title))
+
+        context["pantry_items"] = pantry_items
+        context["recipe_matches"] = recipe_matches
+        return context

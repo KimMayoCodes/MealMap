@@ -15,7 +15,9 @@
             store recipes, track ingredients, and build realistic weekly meal plans.
         </p>
         <div class="mt-4">
-            <a href="#" class="btn btn-success btn-lg me-2">Get Started</a>
+            <a href="{% url 'pantry_list' %}" class="btn btn-success">
+                Start Building Your Pantry
+            </a>
             {% if user.is_staff %}
                 <a href="/admin/" class="btn btn-outline-secondary">Admin Panel</a>
             {% endif %}
@@ -52,12 +54,12 @@
     </div>
 
     <div class="col-md-4">
-        <a href="{% url 'mealplan_list' %}" class="text-decoration-none">
+        <a href="{% url 'suggested_recipes' %}" class="text-decoration-none">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <h5 class="text-success">Stay Organized</h5>
+                    <h5 class="text-success">Find Recipes From Your Pantry</h5>
                     <p class="text-muted">
-                        Reduce last-minute meal stress by organizing your meals ahead of time.
+                        Get recipe suggestions based on ingredients you already have in your pantry.
                     </p>
                 </div>
             </div>

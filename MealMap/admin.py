@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import Recipe, Ingredient, MealPlan, MealPlanEntry
+from .models import (
+    Recipe,
+    Ingredient,
+    MealPlan,
+    MealPlanEntry, 
+    PantryItem
+    )
 
 
 class IngredientInline(admin.TabularInline):
@@ -38,3 +44,10 @@ class MealPlanEntryAdmin(admin.ModelAdmin):
     search_fields = ("meal_plan__title", "recipe__title")
     list_filter = ("day_of_week", "meal_type")
     ordering = ("day_of_week", "meal_type")
+
+@admin.register(PantryItem)
+class PantryItemAdmin(admin.ModelAdmin):
+    list_display = ("name", "owner", "quantity", "created_at")
+    search_fields = ("name", "owner__username")
+    list_filter = ("created_at",)
+    ordering = ("name",)

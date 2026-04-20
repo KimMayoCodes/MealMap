@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}My Pantry | MealMap{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h1 class="text-success mb-0">My Pantry</h1>
+
+    <div class="d-flex gap-2 flex-wrap">
+        <a href="{% url 'suggested_recipes' %}" class="btn btn-outline-success">
+            Suggest Recipes
+        </a>
+        <a href="{% url 'pantry_create' %}" class="btn btn-success">
+            Add Pantry Item
+        </a>
+    </div>
+</div>
+
+{% if pantry_items %}
+    <div class="list-group">
+        {% for item in pantry_items %}
+            <div class="list-group-item shadow-sm">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                    
+                    <!-- Item info -->
+                    <div>
+                        <h5 class="mb-1">{{ item.name }}</h5>
+                        <p class="mb-1">
+                            <strong>Quantity:</strong> {{ item.quantity }}
+                        </p>
+
+                        {% if item.notes %}
+                            <small class="text-muted">{{ item.notes }}</small>
+                        {% endif %}
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'pantry_update' item.pk %}" class="btn btn-warning btn-sm">
+                            Edit
+                        </a>
+                        <a href="{% url 'pantry_delete' item.pk %}" class="btn btn-danger btn-sm">
+                            Delete
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info shadow-sm">
+        Your pantry is empty. Add your first pantry item to start tracking ingredients and get recipe suggestions.
+    </div>
+{% endif %}
+{% endblock %}

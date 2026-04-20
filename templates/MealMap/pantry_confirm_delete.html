@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Pantry Item | MealMap{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm border-danger page-card">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-3 text-danger">Delete Pantry Item</h1>
+
+                <p>
+                    Are you sure you want to delete
+                    <strong>{{ object.quantity }} {{ object.name }}</strong>?
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <a href="{% url 'pantry_list' %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

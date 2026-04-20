@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Suggested Recipes | MealMap{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h1 class="text-success mb-0">Suggested Recipes</h1>
+    <a href="{% url 'pantry_list' %}" class="btn btn-secondary">
+        Back to Pantry
+    </a>
+</div>
+
+{% if pantry_items %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="h5 text-success mb-3">Pantry Items Used for Matching</h2>
+            <div class="d-flex flex-wrap gap-2">
+                {% for item in pantry_items %}
+                    <span class="badge bg-light text-dark border">{{ item.name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% if recipe_matches %}
+        <div class="row g-4">
+            {% for recipe, match_count, matched_items in recipe_matches %}
+                <div class="col-md-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h3 class="h5 text-success">{{ recipe.title }}</h3>
+                            <p class="text-muted mb-2">{{ recipe.cook_time }} minutes</p>
+                            <p>{{ recipe.description|default:"No description provided." }}</p>
+                            <p class="mb-2">
+                                <strong>Matching pantry items:</strong> {{ match_count }}
+                            </p>
+                            <p class="mb-3">
+                                <strong>Matches:</strong>
+                                {% for item in matched_items %}
+                                    <span class="badge bg-light text-dark border">{{ item }}</span>
+                                {% endfor %}
+                            </p>
+                            <a href="{% url 'recipe_detail' recipe.pk %}" class="btn btn-outline-success btn-sm">
+                                View Recipe
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info shadow-sm">
+            No recipe suggestions were found based on your current pantry items.
+        </div>
+    {% endif %}
+{% else %}
+    <div class="alert alert-info shadow-sm">
+        Your pantry is empty. Add pantry items first to get recipe suggestions.
+    </div>
+{% endif %}
+{% endblock %}
