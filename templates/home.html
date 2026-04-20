@@ -16,46 +16,52 @@
         </p>
         <div class="mt-4">
             <a href="#" class="btn btn-success btn-lg me-2">Get Started</a>
-            <a href="/admin/" class="btn btn-outline-secondary btn-lg">Admin Panel</a>
+            {% if user.is_staff %}
+                <a href="/admin/" class="btn btn-outline-secondary">Admin Panel</a>
+            {% endif %}
         </div>
     </div>
 </div>
 
-<div class="row g-4">
+<div class="row g-4 mt-4">
     <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h3 class="card-title h5 text-success">Save Recipes</h3>
-                <p class="card-text">
-                    Keep all of your favorite recipes in one place with cooking time,
-                    instructions, and ingredient details.
-                </p>
+        <a href="{% url 'recipe_list' %}" class="text-decoration-none">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="text-success">Save Recipes</h5>
+                    <p class="text-muted">
+                        Keep all of your favorite recipes in one place with cooking time,
+                        instructions, and ingredient details.
+                    </p>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h3 class="card-title h5 text-success">Plan Your Week</h3>
-                <p class="card-text">
-                    Create meal plans for the week and assign recipes to specific days
-                    and meal types.
-                </p>
+        <a href="{% url 'mealplan_list' %}" class="text-decoration-none">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="text-success">Plan Your Week</h5>
+                    <p class="text-muted">
+                        Create meal plans for the week and assign recipes to specific days and meal types.
+                    </p>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h3 class="card-title h5 text-success">Stay Organized</h3>
-                <p class="card-text">
-                    Reduce last-minute meal stress by organizing your meals ahead of time
-                    in a clean, user-friendly app.
-                </p>
+        <a href="{% url 'mealplan_list' %}" class="text-decoration-none">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="text-success">Stay Organized</h5>
+                    <p class="text-muted">
+                        Reduce last-minute meal stress by organizing your meals ahead of time.
+                    </p>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 {% endblock %}
