@@ -2,6 +2,14 @@
 
 MealMap is a Django web application designed for home cooks and busy individuals who want a centralized place to store recipes, organize ingredients, and plan meals for the week.
 
+## 📸 Screenshots
+Home Page
+<img width="1872" height="891" alt="image" src="https://github.com/user-attachments/assets/6dbce726-0b35-4cde-aa62-864235cce9d2" />
+
+Meal Plan
+<img width="1842" height="690" alt="image" src="https://github.com/user-attachments/assets/46256214-0dce-4b0b-8c04-a4fd009e4f84" />
+
+
 ## 🚀 Features
 - Full CRUD functionality for recipes (create, view, update, delete)
 - Add and manage ingredients for each recipe
@@ -31,6 +39,7 @@ MealMap is a Django web application designed for home cooks and busy individuals
 6. Start the development server:
    ```bash
    python manage.py runserver
+   
 ## 🎯 Project Purpose
 MealMap was created to help users simplify meal planning by organizing recipes and turning them into structured weekly plans. The goal is to reduce last-minute decision-making and make home cooking more manageable.
 
