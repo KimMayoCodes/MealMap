@@ -43,6 +43,13 @@ Meal Plan
 ## 🎯 Project Purpose
 MealMap was created to help users simplify meal planning by organizing recipes and turning them into structured weekly plans. The goal is to reduce last-minute decision-making and make home cooking more manageable.
 
+## 📚 Key Learnings
+- Built a full-stack Django application with authentication and user-specific data
+- Designed relational models for recipes, ingredients, and meal planning
+- Implemented CRUD functionality across multiple features
+- Gained experience organizing a multi-file Django project
+- Improved understanding of workflows, version control, and team collaboration
+
 ## 🔮 Future Enhancements
 - Pantry tracking
 - Ingredient-based recipe suggestions
